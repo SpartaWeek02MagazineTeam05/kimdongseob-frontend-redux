@@ -2,9 +2,9 @@ import React from 'react';
 import {useNavigate} from "react-router-dom";
 import pageList from "../pageList";
 import styled from "styled-components";
-import axios from "axios";
 import {useRecoilValue} from "recoil";
 import {selectorPost} from "../state/Post";
+import {Text, Button} from 'molecule';
 
 const PostListPage = () => {
   const postList = useRecoilValue(selectorPost)
@@ -12,30 +12,25 @@ const PostListPage = () => {
   const handleClickCreate = () => {
     navigate(`/${pageList.createPost}`)
   }
-  // const getPostList = async () => {
-  //   const response = await axios.get('http://localhost:3001/post');
-  //   console.log("response", response);
-  // }
-  console.log("postList", postList)
 
   return (
     <>
       <PostListWrapper>
-        {postList.map((post: object, idx: number) => (
+        {postList.map((post: any, idx: number) => (
           <PostWrapper key={idx}>
             <PostHeader>
               <PostUser>
-                <ProfileImg src={'/kakao.jpg'}/>
-                <div>USERNAME</div>
+                <ProfileImg src={post.image}/>
+                <Text>{post.userId}</Text>
               </PostUser>
-              <div>00시간 전</div>
+              <Text>00시간 전</Text>
             </PostHeader>
             <PostBody>
-              <div>코멘트 코멘트</div>
-              <div>이미지 이미지</div>
+              <PostImg src={"/kakao.jpg"}/>
+              <Text>{post.contents}</Text>
               <LikeWrapper>
-                <div>좋아요</div>
-                <button>좋아요 버튼</button>
+                <Button>좋아요 버튼</Button>
+                <Text>likes : {post.like}</Text>
               </LikeWrapper>
             </PostBody>
           </PostWrapper>
@@ -50,28 +45,38 @@ const PostListPage = () => {
 export default PostListPage;
 
 const PostListWrapper = styled.div`
-  max-width: 300px;
+  //max-width: 300px;
 `;
 const PostWrapper = styled.div`
   width: 100%;
-  border: 1px solid red;
-  padding: 16px;
+  //border: 1px solid red;
 `;
 const PostHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 10px 16px;
 `;
 const PostUser = styled.div`
   display: flex;
   align-items: center;
+  
+  > p {
+    margin-left: 8px;
+  }
 `;
 const PostBody = styled.div`
+  > p {
+    padding: 0 16px;
+  }
 `;
 const LikeWrapper = styled.div`
-  display: flex;
-  align-items: center;
+  padding: 10px 16px;
 `;
 const ProfileImg = styled.img`
-  width: 50px;
+  width: 40px;
+  border-radius: 10em;
+`;
+const PostImg = styled.img`
+  width: 100%;
 `;

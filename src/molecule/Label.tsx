@@ -1,22 +1,21 @@
 import React from 'react';
-// import styled from 'styled-components'
+import styled from 'styled-components'
 
 interface Props {
-    text: string;
+  text: string;
 }
+
 const Label: React.FC<Props> = (
   {
     text,
     ...props
   }) => {
   return (
-    <>
-      <label {...props}>{text}</label>
-    </>
+    <CustomLabel {...props}>{text}</CustomLabel>
   )
 }
 
 export default Label;
-// const Wrapper = styled.label`
-//
-// `;
+const CustomLabel = styled.label`
+  color: ${({theme}) => theme.colors.black};
+`;

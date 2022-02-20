@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {Input, Button} from "molecule";
+import {Input, Button, Text} from "molecule";
 import {loginAtom, userInfoAtom} from 'state/User';
 import {useSetRecoilState, useRecoilState} from 'recoil';
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import axios from 'axios';
 import {setCookie} from "shared/Cookie";
+import pageList from "../pageList";
 
 
 const LoginPage = () => {
@@ -43,10 +44,10 @@ const LoginPage = () => {
       // }
       // console.log("loginState: ", loginState)
       // console.log("userIdState: ", userIdState)
-      await axios.post("http://localhost:3001/login", {
-        userId: userId,
-        password: pwd
-      }).then((res: any) => {
+      const frm = new FormData();
+      frm.append('username', userId);
+      frm.append('password', pwd);
+      await axios.post("http://localhost:3001/login", frm).then((res: any) => {
         if (res.data.result) {
           setUserInfo({userId: res.data.userId})
           setIsLogin(true);
@@ -86,8 +87,14 @@ const LoginPage = () => {
 
       <Input label={"아이디"} onChange={handleChangeId} autoFocus/>
       <Input label={"비밀번호"} onChange={handleChangePwd} disabled={userId === "" && true}/>
-
-      <Button onClick={handleClickLogin} disabled={pwd === "" && true}>로그인하기</Button>
+      <div style={{display: 'flex', columnGap: 8}}>
+        <Button fluid variant={"outlined"} onClick={() => navigate(-1)}>뒤로가기</Button>
+        <Button fluid onClick={handleClickLogin} disabled={pwd === "" && true}>로그인하기</Button>
+      </div>
+      <div style={{display: 'flex', marginTop: 8}}>
+        <Text color={"#ddd"}>아직 회원이 아니신가요?</Text>
+        <Link to={`/${pageList.signUp}`} style={{marginLeft: 8}}>회원가입</Link>
+      </div>
     </>
   )
 }
