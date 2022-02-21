@@ -36,15 +36,16 @@ const SignUpPage = () => {
         userPwdCheck: pwdCheck,
         nickName: nickName
       }
-      await axios.post("http://localhost:3001/register", data)
+      await axios.post("/api/register", data)
         .then((response) => {
-          console.log(response.data)
+          console.log(response.data);
+          navigate("/login");
         })
         .catch((err) => {
           console.log("error : ", err)
-        })
+        });
     }
-  }
+  };
 
   return (
     <>

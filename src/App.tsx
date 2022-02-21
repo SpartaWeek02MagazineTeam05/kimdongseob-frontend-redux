@@ -1,6 +1,6 @@
 import React, {Suspense, useState} from "react";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
-import {Header, LoginPage, PostListPage, SignUpPage} from './page'
+import {EditPostPage, Header, LoginPage, PostListPage, SignUpPage} from './page'
 import pageList from "./pageList";
 import {RecoilRoot} from "recoil";
 import CreatePostPage from "./page/CreatePostPage";
@@ -21,19 +21,20 @@ function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <RecoilRoot>
-          <Suspense fallback={() => <p>loading...</p>}>
-            <BodyWrapper>
-              <div>
+          <BodyWrapper>
+            <div>
+              <Suspense fallback={() => <p>loading...</p>}>
                 <Header changeTheme={changeTheme}/>
                 <Routes>
                   <Route path="/" element={<PostListPage/>}/>
                   <Route path={`/${pageList.signUp}`} element={<SignUpPage/>}/>
                   <Route path={`/${pageList.login}`} element={<LoginPage/>}/>
                   <Route path={`/${pageList.createPost}`} element={<CreatePostPage/>}/>
+                  <Route path={`/${pageList.editPost}/:postId`} element={<EditPostPage/>}/>
                 </Routes>
-              </div>
-            </BodyWrapper>
-          </Suspense>
+              </Suspense>
+            </div>
+          </BodyWrapper>
         </RecoilRoot>
       </BrowserRouter>
     </ThemeProvider>

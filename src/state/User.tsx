@@ -1,11 +1,6 @@
 import {atom, selector} from "recoil";
 import axios from "axios";
 
-const userIdAtom = atom({
-  key: "userIdAtom",
-  default: {userId: ""}
-});
-
 const userStateAtom = atom({
   key: "userStateAtom",
   default: {
@@ -19,16 +14,16 @@ const loginAtom = atom({
   default: false,
 })
 
-const userInfoAtom = atom({
+const userInfoAtom = atom<string>({
   key: "userInfo",
-  default: {userId: ""},
+  default: "",
 })
 
 const selectorUserState = selector({
   key: 'selectorUserState',
   get: async ({get}) => {
     const userInfo = get(userStateAtom)
-    const response = await axios.post('http://localhost:3001/login', {
+    const response = await axios.post('/apis/login', {
       userId: userInfo.userId,
       password: userInfo.password,
     });
@@ -41,4 +36,4 @@ const selectorUserState = selector({
   }
 });
 
-export {userIdAtom, userStateAtom, selectorUserState, loginAtom, userInfoAtom};
+export {userStateAtom, selectorUserState, loginAtom, userInfoAtom};

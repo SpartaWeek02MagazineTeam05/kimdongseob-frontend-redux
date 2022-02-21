@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import pageList from "../pageList";
 // import styled from "styled-components";
 import {useRecoilState, useRecoilValue} from "recoil";
-import {loginAtom, userInfoAtom} from "../state/User";
+import {loginAtom, userInfoAtom} from "state";
 import {deleteCookie, getCookie} from "../shared/Cookie";
 import styled from "styled-components";
 
@@ -18,15 +18,24 @@ const Header: React.FC<Props> = (
   }) => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useRecoilState(loginAtom);
-  const userInfo = useRecoilValue(userInfoAtom);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
 
   useEffect(() => {
-    const cookie = getCookie(document.cookie);
-  }, [])
+    const cookie = document.cookie;
+    const user = cookie.split("=").pop();
+    if (cookie) {
+      setUserInfo(`${user}`);
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, []);
 
   const handleClickLogout = () => {
-    deleteCookie(userInfo.userId);
+    // deleteCookie(userInfo.userId);
+    deleteCookie("userId", userInfo);
     setIsLogin(false);
+    navigate("/");
   };
   return (
     <Wrapper>
