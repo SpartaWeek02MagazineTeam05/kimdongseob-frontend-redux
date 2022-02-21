@@ -22,9 +22,14 @@ const Header: React.FC<Props> = (
 
   useEffect(() => {
     const cookie = document.cookie;
-    const user = cookie.split("=").pop();
+    const splitCookie = cookie.split("; ");
+    let resCookie: (string | undefined)[] = []
+    splitCookie.forEach((item) => {
+      resCookie.push(item.split("=").pop());
+    });
     if (cookie) {
-      setUserInfo(`${user}`);
+      setUserInfo({username: resCookie[0]});
+      setUserInfo({nickName: resCookie[1]});
       setIsLogin(true);
     } else {
       setIsLogin(false);
@@ -32,8 +37,8 @@ const Header: React.FC<Props> = (
   }, []);
 
   const handleClickLogout = () => {
-    // deleteCookie(userInfo.userId);
-    deleteCookie("userId", userInfo);
+    deleteCookie("username");
+    deleteCookie("nickName");
     setIsLogin(false);
     navigate("/");
   };

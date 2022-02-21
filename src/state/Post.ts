@@ -1,12 +1,6 @@
 import {atom, selector} from "recoil";
 import axios from "axios";
 
-interface PostAtom {
-  nickName: string;
-  contents: string;
-  image: string;
-  type: string;
-}
 
 const postListAtom = atom({
   key: "postListAtom",
@@ -22,6 +16,13 @@ const postAtom = atom<PostAtom>({
     type: ""
   }
 })
+
+interface PostAtom {
+  nickName?: string;
+  contents?: string;
+  image?: string;
+  type?: string;
+}
 
 const selectorPost = selector({
   key: 'selectorPost',

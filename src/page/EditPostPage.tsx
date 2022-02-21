@@ -31,7 +31,7 @@ const EditPostPage = () => {
       return;
     }
     const data = {
-      nickName: userInfo,
+      nickName: userInfo.nickName,
       contents: contents,
       image: 'none',
       type: 'none'
@@ -49,6 +49,8 @@ const EditPostPage = () => {
       .catch(() => alert("게시물 등록 실패"));
     await navigate("/");
   }
+
+
 
   return (
     <>

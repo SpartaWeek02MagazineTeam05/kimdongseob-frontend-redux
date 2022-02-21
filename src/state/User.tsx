@@ -4,7 +4,7 @@ import axios from "axios";
 const userStateAtom = atom({
   key: "userStateAtom",
   default: {
-    userId: "",
+    username: "",
     password: "",
   }
 });
@@ -14,20 +14,29 @@ const loginAtom = atom({
   default: false,
 })
 
-const userInfoAtom = atom<string>({
+interface UserInfoAtom {
+  username?: string;
+  nickName?: string;
+}
+
+const userInfoAtom = atom<UserInfoAtom>({
   key: "userInfo",
-  default: "",
+  default: {
+    username: "",
+    nickName: "",
+  },
 })
 
+// 현재 사용 되지 않음
 const selectorUserState = selector({
   key: 'selectorUserState',
   get: async ({get}) => {
     const userInfo = get(userStateAtom)
     const response = await axios.post('/apis/login', {
-      userId: userInfo.userId,
+      username: userInfo.username,
       password: userInfo.password,
     });
-    if(response.data.result) {
+    if (response.data.result) {
       localStorage.setItem('token', response.data.token);
       return response.data.result
     } else {

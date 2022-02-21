@@ -21,7 +21,7 @@ const CreatePostPage = () => {
       return;
     }
     const data = {
-      nickName: userInfo,
+      nickName: userInfo.nickName,
       contents: contents,
       image: 'none',
       type: 'none'

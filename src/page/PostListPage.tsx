@@ -13,9 +13,9 @@ const PostListPage = () => {
   const handleClickCreate = () => {
     navigate(`/${pageList.createPost}`);
   };
-  const handleClickModify = (postUserId: string, postId?: number) => {
+  const handleClickModify = (postNickName: string, postId?: number) => {
     const userId = document.cookie.split("=").pop();
-    if (postUserId === userId && postId) {
+    if ((postNickName === userId) && postId) {
       console.log("수정가능해!");
       setEditPostId(postId);
       navigate(`/${pageList.editPost}/${postId}`);
@@ -34,7 +34,7 @@ const PostListPage = () => {
               <PostHeader>
                 <PostUser>
                   <ProfileImg src={post.image}/>
-                  <Text>{post.userId}</Text>
+                  <Text>{post.nickName}</Text>
                 </PostUser>
                 <Text>00시간 전</Text>
               </PostHeader>
@@ -42,7 +42,7 @@ const PostListPage = () => {
                 <PostImg src={"/kakao.jpg"}/>
                 <Text>{post.contents}</Text>
                 <LikeWrapper>
-                  <Button onClick={() => handleClickModify(post.userId, post.id)}>수정</Button>
+                  <Button onClick={() => handleClickModify(post.nickName, post.id)}>수정</Button>
                   <Button>좋아요 버튼</Button>
                   <Text>likes : {post.like}</Text>
                 </LikeWrapper>
