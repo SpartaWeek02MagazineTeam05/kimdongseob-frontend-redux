@@ -25,13 +25,15 @@ function App() {
             <div>
               <Suspense fallback={() => <p>loading...</p>}>
                 <Header changeTheme={changeTheme}/>
-                <Routes>
-                  <Route path="/" element={<PostListPage/>}/>
-                  <Route path={`/${pageList.signUp}`} element={<SignUpPage/>}/>
-                  <Route path={`/${pageList.login}`} element={<LoginPage/>}/>
-                  <Route path={`/${pageList.createPost}`} element={<CreatePostPage/>}/>
-                  <Route path={`/${pageList.editPost}/:postId`} element={<EditPostPage/>}/>
-                </Routes>
+                <BodyInner>
+                  <Routes>
+                    <Route path="/" element={<PostListPage/>}/>
+                    <Route path={`/${pageList.signUp}`} element={<SignUpPage/>}/>
+                    <Route path={`/${pageList.login}`} element={<LoginPage/>}/>
+                    <Route path={`/${pageList.createPost}`} element={<CreatePostPage/>}/>
+                    <Route path={`/${pageList.editPost}/:postId`} element={<EditPostPage/>}/>
+                  </Routes>
+                </BodyInner>
               </Suspense>
             </div>
           </BodyWrapper>
@@ -44,12 +46,17 @@ function App() {
 export default App;
 
 const BodyWrapper = styled.div`
-  //height: 100%;
-  padding: 16px 30px;
+  height: 100vh;
+  overflow: auto;
   background-color:${({theme}) => theme.colors.white};
   
   > div {
-    max-width: 400px;
-    margin: 0 auto;    
+    margin: 0 auto;
   }
+`;
+
+const BodyInner = styled.div`
+  max-width: 400px;
+  margin: 0 auto;
+  padding-top: 80px; 
 `;

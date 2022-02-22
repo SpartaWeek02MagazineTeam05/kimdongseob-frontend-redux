@@ -72,7 +72,7 @@ const LoginPage = () => {
       {/*{userIdState && <div>{userIdState.userId}</div>}*/}
 
       <Input label={"아이디"} onChange={handleChangeId} autoFocus/>
-      <Input label={"비밀번호"} onChange={handleChangePwd} disabled={username === "" && true} onKeyUp={handleKeyUp}/>
+      <Input label={"비밀번호"} type={"password"} onChange={handleChangePwd} disabled={username === "" && true} onKeyUp={handleKeyUp}/>
       <div style={{display: 'flex', columnGap: 8}}>
         <Button fluid variant={"outlined"} onClick={() => navigate(-1)}>뒤로가기</Button>
         <Button fluid onClick={handleClickLogin} disabled={pwd === "" && true}>로그인하기</Button>

@@ -1,5 +1,5 @@
 import {userStateAtom, selectorUserState, loginAtom, userInfoAtom} from './User';
-import {postAtom, postListAtom, selectorPost, editPostIdAtom, editPostIdSelector} from './Post';
+import {postAtom, postListAtom, selectorPost, editPostIdAtom} from './Post';
 
 export {
   userStateAtom,
@@ -10,5 +10,4 @@ export {
   postListAtom,
   selectorPost,
   editPostIdAtom,
-  editPostIdSelector
 }

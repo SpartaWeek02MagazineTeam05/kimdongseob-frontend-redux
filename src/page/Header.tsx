@@ -28,8 +28,7 @@ const Header: React.FC<Props> = (
       resCookie.push(item.split("=").pop());
     });
     if (cookie) {
-      setUserInfo({username: resCookie[0]});
-      setUserInfo({nickName: resCookie[1]});
+      setUserInfo({username: resCookie[0], nickName: resCookie[1]});
       setIsLogin(true);
     } else {
       setIsLogin(false);
@@ -43,27 +42,40 @@ const Header: React.FC<Props> = (
     navigate("/");
   };
   return (
-    <Wrapper>
-      <div>GRAM</div>
-      <BtnGroup>
-        <Button onClick={changeTheme}>테마변경</Button>
-        {!isLogin ?
-          <>
-            <Button variant="outlined" onClick={() => navigate(`/${pageList.login}`)}>로그인</Button>
-          </> :
-          <Button onClick={handleClickLogout}>logOut</Button>
-        }
-      </BtnGroup>
-    </Wrapper>
+    <ReactWrapper>
+      <Wrapper>
+        <div>GRAM</div>
+        <BtnGroup>
+          <Button onClick={changeTheme}>테마변경</Button>
+          {!isLogin ?
+            <>
+              <Button variant="outlined" onClick={() => navigate(`/${pageList.login}`)}>로그인</Button>
+            </> :
+            <Button onClick={handleClickLogout}>logOut</Button>
+          }
+        </BtnGroup>
+      </Wrapper>
+    </ReactWrapper>
   )
 }
 
 export default Header;
 
+const ReactWrapper = styled.div`
+  position: fixed;
+  width: 100%;
+  background-color: ${({theme}) => theme.colors.grayBg};
+  height: 60px;
+  padding: 2rem;
+`;
+
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 `;
 
 const BtnGroup = styled.div`

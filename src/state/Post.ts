@@ -7,22 +7,26 @@ const postListAtom = atom({
   default: []
 });
 
+
+interface PostAtom {
+  nickName?: string;
+  contents?: string;
+  image?: any;
+  type?: string;
+  id?: number;
+}
+
 const postAtom = atom<PostAtom>({
   key: "postAtom",
   default: {
     nickName: "",
     contents: "",
-    image: 'none',
-    type: ""
+    image: undefined,
+    type: "",
+    id: 0
   }
 })
 
-interface PostAtom {
-  nickName?: string;
-  contents?: string;
-  image?: string;
-  type?: string;
-}
 
 const selectorPost = selector({
   key: 'selectorPost',
@@ -39,24 +43,25 @@ const selectorPost = selector({
   // }
 });
 
+// 수정할 post id 관리
 const editPostIdAtom = atom({
   key: "editPostIdAtom",
   default: 0,
 })
 
-const editPostIdSelector = selector({
-  key: "",
-  get: async ({get}) => {
-    await axios.get('http://localhost:3001/post')
-      .then((res) => {
-        console.log(res);
-        const editPost = res.data.filter((item: any) => item.id === get(editPostIdAtom));
-        console.log("editPost 리코일 : ", editPost);
-        return editPost;
-      })
-      .catch(() => alert("에러다 임마~"));
-  }
-})
+// const editPostIdSelector = selector({
+//   key: "",
+//   get: async ({get}) => {
+//     await axios.get('http://localhost:3001/post')
+//       .then((res) => {
+//         console.log(res);
+//         const editPost = res.data.filter((item: any) => item.id === get(editPostIdAtom));
+//         console.log("editPost 리코일 : ", editPost);
+//         return editPost;
+//       })
+//       .catch(() => alert("에러다 임마~"));
+//   }
+// })
 
 // const createPostSelector = selector({
 //   key: 'selectorPost',
@@ -74,4 +79,4 @@ const editPostIdSelector = selector({
 //   }
 // });
 
-export {postAtom, postListAtom, selectorPost, editPostIdAtom, editPostIdSelector};
+export {postAtom, postListAtom, selectorPost, editPostIdAtom};

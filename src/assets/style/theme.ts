@@ -67,6 +67,7 @@ const lightThemeColors = {
   black: '#333',
   white: '#fff',
   globalBg:'#F6F7FB',
+  grayBg:'#f7f8fc',
 };
 
 const darkThemeColors = {
@@ -77,6 +78,7 @@ const darkThemeColors = {
   black: '#fff',
   white: '#333',
   globalBg:'#333',
+  grayBg:'#454545',
 };
 
 const defalutTheme = {
