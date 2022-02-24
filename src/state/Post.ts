@@ -49,6 +49,12 @@ const editPostIdAtom = atom({
   default: 0,
 })
 
+// 상세 Post id 관리
+const detailPostIdAtom = atom({
+  key: "detailPostIdAtom",
+  default: 0,
+})
+
 // const editPostIdSelector = selector({
 //   key: "",
 //   get: async ({get}) => {
@@ -79,4 +85,10 @@ const editPostIdAtom = atom({
 //   }
 // });
 
-export {postAtom, postListAtom, selectorPost, editPostIdAtom};
+export {
+  postAtom,
+  postListAtom,
+  selectorPost,
+  editPostIdAtom,
+  detailPostIdAtom
+};

@@ -1,6 +1,6 @@
-import React, {Suspense, useState} from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
-import {EditPostPage, Header, LoginPage, PostListPage, SignUpPage} from './page'
+import {EditPostPage, Header, LoginPage, PostListPage, SignUpPage, DetailPostPage} from './page'
 import pageList from "./pageList";
 import {RecoilRoot} from "recoil";
 import CreatePostPage from "./page/CreatePostPage";
@@ -32,6 +32,7 @@ function App() {
                     <Route path={`/${pageList.login}`} element={<LoginPage/>}/>
                     <Route path={`/${pageList.createPost}`} element={<CreatePostPage/>}/>
                     <Route path={`/${pageList.editPost}/:postId`} element={<EditPostPage/>}/>
+                    <Route path={`/${pageList.detailPost}/:postId`} element={<DetailPostPage/>}/>
                   </Routes>
                 </BodyInner>
               </Suspense>

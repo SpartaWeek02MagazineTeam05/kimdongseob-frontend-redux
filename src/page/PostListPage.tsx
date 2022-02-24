@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import pageList from "../pageList";
 import styled from "styled-components";
 import {useRecoilValue, useSetRecoilState} from "recoil";
-import {editPostIdAtom, selectorPost, userInfoAtom} from "state";
+import {detailPostIdAtom, editPostIdAtom, selectorPost, userInfoAtom} from "state";
 import {Text, Button} from 'molecule';
 import axios from "axios";
 import {PostCardView} from "../components";
@@ -13,9 +13,15 @@ const PostListPage = () => {
   const postList = useRecoilValue(selectorPost);
   const userInfo = useRecoilValue(userInfoAtom);
   const setEditPostId = useSetRecoilState(editPostIdAtom);
+  const setDetailPostId = useSetRecoilState(detailPostIdAtom);
   const [like, setLike] = useState<boolean>(false);
   // const [postList, setPostList] = useState([]);
   const navigate = useNavigate();
+
+  const [target, setTarget] = useState(null);
+  const [itemList, setItemLists] = useState([1]);
+
+  // let observer = new IntersectionObserver(callback, options);
   const handleClickCreate = () => {
     navigate(`/${pageList.createPost}`);
   };
@@ -57,6 +63,22 @@ const PostListPage = () => {
       });
   }
 
+  const handleClickRemove = async (postId: string | number) => {
+    await axios
+      .delete(`http://localhost:3001/post/${postId}`)
+      .then((res) => alert("삭제 완료~"))
+      .catch(() => alert("삭제 에러"));
+  }
+
+  const handleClickDetail = (postId?: number) => {
+    if (postId) {
+      setDetailPostId(postId);
+      navigate(`/${pageList.detailPost}/${postId}`);
+    } else {
+      console.log("수정 불가능해");
+    }
+  };
+
   // useEffect(() => {
   //   getPost()
   // }, []);
@@ -78,7 +100,9 @@ const PostListPage = () => {
             post={post}
             onClickModify={() => handleClickModify(post.nickName, post.id)}
             onClickLike={() => handleClickLike(post.id)}
-            like={like}
+            onClickRemove={() => handleClickRemove(post.id)}
+            onClickDetail={() => handleClickDetail(post.id)}
+            // like={like}
             isPossibleModify={post.nickName === possibleModify()}
             type={post.type}
           />)) : <Text>게시물이 없어요~</Text>

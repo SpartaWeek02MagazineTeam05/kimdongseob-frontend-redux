@@ -1,5 +1,5 @@
 import {Button, Text} from "../molecule";
-import React, {MouseEventHandler} from "react";
+import React, {MouseEventHandler, useState} from "react";
 import styled from "styled-components";
 import {AiOutlineHeart} from 'react-icons/ai';
 import {AiFillHeart} from 'react-icons/ai';
@@ -8,7 +8,9 @@ interface Props {
   post?: any;
   onClickModify?: MouseEventHandler;
   onClickLike?: MouseEventHandler;
-  like?: boolean;
+  onClickRemove?: MouseEventHandler;
+  onClickDetail?: MouseEventHandler;
+  // like?: boolean;
   isPossibleModify?: boolean;
   type?: "full" | "left" | "right"
 }
@@ -18,10 +20,16 @@ const PostCardView: React.FC<Props> = (
     post,
     onClickModify,
     onClickLike,
+    onClickRemove,
+    onClickDetail,
     isPossibleModify,
-    like,
+    // like,
     type
   }) => {
+  const [like, setLike] = useState(false);
+  const handleClickLike = () => {
+    setLike(!like);
+  }
   return (
     <PostWrapper>
       <PostHeader>
@@ -32,20 +40,24 @@ const PostCardView: React.FC<Props> = (
         <CreateAtText>00시간 전</CreateAtText>
       </PostHeader>
       <PostBody>
-        <PostTypeView type={type}>
+        <PostTypeView type={type} onClick={onClickDetail}>
           <PostImg src={"/kakao.jpg"}/>
           <Text style={{whiteSpace: 'pre-wrap'}}>{post.contents}</Text>
         </PostTypeView>
         {isPossibleModify &&
         <ModifyBtn>
           <Button variant={"outlined"} onClick={onClickModify}>수정</Button>
-          <Button variant={"outlined"}>삭제</Button>
+          <Button variant={"outlined"} onClick={onClickRemove}>삭제</Button>
         </ModifyBtn>
         }
         <LikeWrapper>
+          {/*<SecondaryText>{like ? post.likeCount + 1 : post.likeCount} 명이 좋아합니다</SecondaryText>*/}
           <SecondaryText>{like ? post.likeCount + 1 : post.likeCount} 명이 좋아합니다</SecondaryText>
-          {like ? <LikeBtn onClick={onClickLike}><AiFillHeart/></LikeBtn>
+          {/*{like ? <LikeBtn onClick={onClickLike}><AiFillHeart/></LikeBtn>
             : <LikeBtn onClick={onClickLike}><AiOutlineHeart/></LikeBtn>
+          }*/}
+          {like ? <LikeBtn onClick={handleClickLike}><AiFillHeart/></LikeBtn>
+            : <LikeBtn onClick={handleClickLike}><AiOutlineHeart/></LikeBtn>
           }
         </LikeWrapper>
       </PostBody>
