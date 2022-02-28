@@ -1,9 +1,9 @@
-import PostListPage from "./PostListPage";
-import SignUpPage from "./SignUpPage";
-import LoginPage from "./LoginPage";
-import Header from "./Header";
-import EditPostPage from "./EditPostPage";
-import DetailPostPage from "./DetailPostPage";
+import PostListPage from "./PostList/PostListPage";
+import SignUpPage from "./SignUp/SignUpPage";
+import LoginPage from "./Login/LoginPage";
+import Header from "./Header/Header";
+import EditPostPage from "./EditPost/EditPostPage";
+import DetailPostPage from "./DetailPost/DetailPostPage";
 
 export {
   PostListPage,

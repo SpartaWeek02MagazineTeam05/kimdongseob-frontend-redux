@@ -1,25 +1,19 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate} from "react-router-dom";
-import styled from "styled-components";
+import React, {useState} from 'react';
+import {useNavigate, useParams} from "react-router-dom";
 import {Button, Radio, Text, Textarea} from "molecule";
-import {useRecoilState, useRecoilValue} from "recoil";
-import {editPostIdAtom, userInfoAtom} from "state";
-import axios from "axios";
+import {RootState} from "state";
+import {useSelector} from "react-redux";
+import {instance} from "../../shared/AxiosInstance";
+import {CreateBody, CreateListWrapper, CreateWrapper, SelectTypeInner, SelectTypeWrapper} from './style';
 
 const EditPostPage = () => {
   const navigate = useNavigate();
-  const userInfo = useRecoilValue(userInfoAtom);
-  const editPostId = useRecoilValue(editPostIdAtom);
+  const param = useParams();
   const [contents, setContents] = useState<string>("");
-  const [image, setImage] = useState<string>("");
   const [curType, setCurType] = useState<string>("");
   const [prevType, setPrevType] = useState<string>();
-  const [modifiedData, setModifiedData] = useState({})
-
-  useEffect(() => {
-    console.log("editPostId: ", editPostId);
-    getPost().then(r => r);
-  }, []);
+  const postList = useSelector((state: RootState) => state.post.postList);
+  const userInfo = useSelector((state: RootState) => state.user.userInfo);
 
   const handleChangeContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContents(e.target.value);
@@ -28,42 +22,57 @@ const EditPostPage = () => {
   const handleChangeType = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurType(e.target.value);
   }
+
+
+  const post = postList.filter((post: any) => post.id === Number(param.postId))[0];
   const editPost = async () => {
-    if (contents === "") {
+    if (post.contents === "" && contents === "") {
       alert("내용을 입력해 임마");
       return;
     }
+    console.log(typeof param.postId);
     const data = {
+      postId: parseInt(param.postId as string),
+      // postId: param.postId,
       nickName: userInfo.nickName,
       contents: contents,
-      // image: null,
+      likeCount: post.likeCount,
+
+      //!Todo: 이미지 받아오는 로직 추가해야함!!
+      image: post.image,
       type: curType
     }
-    await axios.put(`http://localhost:3001/post/${editPostId}`, data)
-      .then((res) => {
+    const config = {
+      headers: {
+        "X-Auth-Token": localStorage.getItem("accessToken"),
+      },
+    }
+    // @ts-ignore
+    await instance.put(`/api/post`, data, config)
+      .then(() => {
         console.log("게시물 수정 성공");
-        return navigate("/");
+        return navigate("/", {replace: true});
       })
       .catch(() => alert("게시물 수정 실패"));
   }
 
-  // 해당 게시물 가져오기
-  const getPost = async () => {
-    await axios.get(`http://localhost:3001/post/${editPostId}`)
-      .then((res) => {
-        setContents(res.data.contents);
-        setPrevType(res.data.type);
-        setImage(res.data.image);
-      })
-      .catch(() => "정보 못 가져왔어~~~");
-  }
+  // // 해당 게시물 가져오기
+  // const getPost = async () => {
+  //   await axios.get(`http://localhost:3001/post/${editPostId}`)
+  //     .then((res) => {
+  //       setContents(res.data.contents);
+  //       setPrevType(res.data.type);
+  //       setImage(res.data.image);
+  //     })
+  //     .catch(() => "정보 못 가져왔어~~~");
+  // }
 
 
   return (
     <>
       <CreateListWrapper>
         <CreateWrapper>
-          <div className="img_box" style={{height: 200, border: '1px solid #ddd'}}/>
+          <img className="img_box" style={{height: 200, border: '1px solid #ddd'}} src={post.image}/>
           <form>
             <input type="file" id="image" accept="img/*"/>
             <label htmlFor="image">파일선택</label>
@@ -73,10 +82,10 @@ const EditPostPage = () => {
               rows={10}
               placeholder={"내용을 입력하세요"}
               onChange={handleChangeContent}
-              defaultValue={contents}
+              defaultValue={post.contents}
             />
           </CreateBody>
-          <SelectTypeWrapper style={contents === "" ? {opacity: 0.5, pointerEvents: 'none'} : undefined}>
+          <SelectTypeWrapper style={post.contents === "" ? {opacity: 0.5, pointerEvents: 'none'} : undefined}>
             <Text>레이아웃을 선택해주세요</Text>
             <SelectTypeInner>
               <Radio
@@ -85,7 +94,7 @@ const EditPostPage = () => {
                 value={"full"}
                 label={"이미지 상"}
                 onChange={handleChangeType}
-                checked={curType ? undefined : prevType === "full"}
+                checked={curType ? undefined : post.type === "full"}
               />
               <Radio
                 id={"left"}
@@ -93,7 +102,7 @@ const EditPostPage = () => {
                 value={"left"}
                 label={"이미지 좌"}
                 onChange={handleChangeType}
-                checked={curType ? undefined : prevType === "left"}
+                checked={curType ? undefined : post.type === "left"}
               />
               <Radio
                 id={"right"}
@@ -101,7 +110,7 @@ const EditPostPage = () => {
                 value={"right"}
                 label={"이미지 우"}
                 onChange={handleChangeType}
-                checked={curType ? undefined : prevType === "right"}
+                checked={curType ? undefined : post.type === "right"}
               />
             </SelectTypeInner>
           </SelectTypeWrapper>
@@ -120,38 +129,3 @@ const EditPostPage = () => {
 }
 
 export default EditPostPage;
-
-const SelectTypeInner = styled.div`
-  display: flex;
-
-  > div {
-    margin-left: 16px;
-
-    &:first-child {
-      margin-left: 0;
-    }
-  }
-`;
-const SelectTypeWrapper = styled.div`
-  padding: 1rem;
-  background-color: ${({theme}) => theme.colors.gray200};
-  border-radius: 8px;
-  margin: 1rem 0;
-
-  > div {
-    margin-top: 1rem;
-  }
-`;
-
-const CreateListWrapper = styled.div`
-  //max-width: 300px;
-`;
-const CreateWrapper = styled.div`
-  width: 100%;
-  //border: 1px solid red;
-`;
-const CreateBody = styled.div`
-  > p {
-    padding: 0 16px;
-  }
-`;

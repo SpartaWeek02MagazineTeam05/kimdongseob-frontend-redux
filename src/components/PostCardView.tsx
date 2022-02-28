@@ -1,5 +1,5 @@
 import {Button, Text} from "../molecule";
-import React, {MouseEventHandler, useState} from "react";
+import React, {MouseEventHandler, useEffect, useState} from "react";
 import styled from "styled-components";
 import {AiOutlineHeart} from 'react-icons/ai';
 import {AiFillHeart} from 'react-icons/ai';
@@ -10,7 +10,7 @@ interface Props {
   onClickLike?: MouseEventHandler;
   onClickRemove?: MouseEventHandler;
   onClickDetail?: MouseEventHandler;
-  // like?: boolean;
+  like?: boolean;
   isPossibleModify?: boolean;
   type?: "full" | "left" | "right"
 }
@@ -23,13 +23,51 @@ const PostCardView: React.FC<Props> = (
     onClickRemove,
     onClickDetail,
     isPossibleModify,
-    // like,
+    like,
     type
   }) => {
-  const [like, setLike] = useState(false);
-  const handleClickLike = () => {
-    setLike(!like);
+  const [fakeLike, setFakeLike] = useState<boolean>(false);
+  const [likeCount, setLikeCount] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (like) {
+      setFakeLike(true);
+    }
+  }, [])
+
+  const kr_time_diff = 9 * 60 * 60 * 1000
+  const today = new Date();
+
+  // 서버에서 태평양시간 기준으로 들어오면 아래와 같이 계산해야 한다.
+  const calcTime = () => {
+    const timeValue = new Date(post.createdAt);
+    const korTimeValue = timeValue.getTime() + kr_time_diff;
+
+    const resultTime = Math.floor((today.getTime() - korTimeValue) / 1000 / 60);
+    if (resultTime < 1) {
+      return "방금 전";
+    }
+    if (resultTime < 60) {
+      return `${resultTime}분전`
+    }
+
+    const resultTimeHour = Math.floor(resultTime / 60);
+    if (resultTimeHour < 24) {
+      return `${resultTimeHour}시간전`;
+    }
+    const resultTimeDay = Math.floor(resultTime / 60 / 24);
+    if (resultTimeDay < 365) {
+      return `${resultTimeDay}일전`;
+    }
+
+    return `${Math.floor(resultTimeDay / 365)}년전`;
   }
+
+  const handleMouseDown = () => {
+    setFakeLike(!fakeLike);
+    setLikeCount(!likeCount)
+  }
+
   return (
     <PostWrapper>
       <PostHeader>
@@ -37,11 +75,12 @@ const PostCardView: React.FC<Props> = (
           <ProfileImg src={"/kakao.jpg"}/>
           <Text>{post.nickName}</Text>
         </PostUser>
-        <CreateAtText>00시간 전</CreateAtText>
+        <CreateAtText>{calcTime()}</CreateAtText>
+        {/*<CreateAtText>{post.modifiedAt}시간 전</CreateAtText>*/}
       </PostHeader>
       <PostBody>
         <PostTypeView type={type} onClick={onClickDetail}>
-          <PostImg src={"/kakao.jpg"}/>
+          <PostImg src={`${post.image}`}/>
           <Text style={{whiteSpace: 'pre-wrap'}}>{post.contents}</Text>
         </PostTypeView>
         {isPossibleModify &&
@@ -51,14 +90,22 @@ const PostCardView: React.FC<Props> = (
         </ModifyBtn>
         }
         <LikeWrapper>
-          {/*<SecondaryText>{like ? post.likeCount + 1 : post.likeCount} 명이 좋아합니다</SecondaryText>*/}
-          <SecondaryText>{like ? post.likeCount + 1 : post.likeCount} 명이 좋아합니다</SecondaryText>
-          {/*{like ? <LikeBtn onClick={onClickLike}><AiFillHeart/></LikeBtn>
-            : <LikeBtn onClick={onClickLike}><AiOutlineHeart/></LikeBtn>
-          }*/}
-          {like ? <LikeBtn onClick={handleClickLike}><AiFillHeart/></LikeBtn>
-            : <LikeBtn onClick={handleClickLike}><AiOutlineHeart/></LikeBtn>
-          }
+          <SecondaryText>
+            {
+              (like && fakeLike) || (!like && !fakeLike) ?
+                post.likeCount
+                : like && !fakeLike ? post.likeCount - 1
+                : !like && fakeLike ? post.likeCount + 1
+                  : post.likeCount
+            } 명이 좋아합니다
+          </SecondaryText>
+          <LikeBtn onMouseUp={onClickLike} onMouseDown={handleMouseDown}>
+            {(like && fakeLike) || (!like && fakeLike) ?
+              <AiFillHeart/>
+              : (like && !fakeLike) || (!like && !fakeLike) ?
+                <AiOutlineHeart/> : <AiOutlineHeart/>
+            }
+          </LikeBtn>
         </LikeWrapper>
       </PostBody>
     </PostWrapper>

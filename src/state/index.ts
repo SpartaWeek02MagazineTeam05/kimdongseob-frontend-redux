@@ -1,14 +1,3 @@
-import {userStateAtom, selectorUserState, loginAtom, userInfoAtom} from './User';
-import {postAtom, postListAtom, selectorPost, editPostIdAtom, detailPostIdAtom} from './Post';
+import {store} from "./configStore";
 
-export {
-  userStateAtom,
-  selectorUserState,
-  loginAtom,
-  userInfoAtom,
-  postAtom,
-  postListAtom,
-  selectorPost,
-  editPostIdAtom,
-  detailPostIdAtom
-}
+export type RootState = ReturnType<typeof store.getState>;

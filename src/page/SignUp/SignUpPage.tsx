@@ -1,49 +1,45 @@
 import React, {useState} from 'react';
 import {Button, Input} from "molecule";
 import {validateEmail, validatePwd} from "shared/validationCheck";
-import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import {signUp} from "../../state/modules/UserKit";
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from "../../state";
 
 const SignUpPage = () => {
   const [userId, setUserId] = useState<string>("");
-  const [pwd, setPwd] = useState<string>("");
-  const [pwdCheck, setPwdCheck] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [passwordCheck, setPasswordCheck] = useState<string>("");
   const [nickName, setNickName] = useState<string>("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const changeId = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserId(e.target.value);
   }
   const changePw = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPwd(e.target.value);
+    setPassword(e.target.value);
   }
   const changePwCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPwdCheck(e.target.value);
+    setPasswordCheck(e.target.value);
   }
   const changeNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickName(e.target.value);
   }
 
-  const signUp = async () => {
-    if (userId === "" || pwd === "" || nickName === "" || pwdCheck === "") {
+  const handleClickRegister = async () => {
+    if (userId === "" || password === "" || nickName === "" || passwordCheck === "") {
       return alert("빈칸있다 임마!");
-    } else if (pwdCheck !== pwd) {
+    } else if (passwordCheck !== password) {
       return;
     } else {
       const data = {
-        userId: userId,
-        password: pwd,
-        userPwdCheck: pwdCheck,
-        nickName: nickName
+        username: userId,
+        nickName: nickName,
+        password: password,
+        passwordCheck: passwordCheck,
       }
-      await axios.post("/api/register", data)
-        .then((response) => {
-          console.log(response.data);
-          navigate("/login");
-        })
-        .catch((err) => {
-          console.log("error : ", err)
-        });
+      dispatch(signUp({data, navigate}))
     }
   };
 
@@ -75,23 +71,23 @@ const SignUpPage = () => {
         onChange={changePw}
         disabled={nickName === "" && true}
       />
-      {(pwd !== "" && !validatePwd(pwd)) && <div>형식 틀렸어 임마</div>}
-      {(pwd !== "" && validatePwd(pwd)) && <div>형식 맞았어 임마</div>}
+      {(password !== "" && !validatePwd(password)) && <div>형식 틀렸어 임마</div>}
+      {(password !== "" && validatePwd(password)) && <div>형식 맞았어 임마</div>}
 
       <Input
         label={"비밀번호 확인"}
         placeholder={"비밀번호를 다시 한번 입력하세요"}
         type="password"
         onChange={changePwCheck}
-        disabled={!validatePwd(pwd) && true}
+        disabled={!validatePwd(password) && true}
       />
 
-      {pwd !== "" && pwd === pwdCheck ? <div>일치해</div>
-        : pwdCheck !== "" && pwd !== pwdCheck ? <div>일치하지 않아</div> : null
+      {password !== "" && password === passwordCheck ? <div>일치해</div>
+        : passwordCheck !== "" && password !== passwordCheck ? <div>일치하지 않아</div> : null
       }
       <div style={{display: 'flex', columnGap: 8}}>
         <Button fluid variant={"outlined"} onClick={() => navigate(-1)}>뒤로가기</Button>
-        <Button fluid onClick={signUp} disabled={pwdCheck === "" && true}>가입하기</Button>
+        <Button fluid onClick={handleClickRegister} disabled={passwordCheck === "" && true}>가입하기</Button>
       </div>
     </>
   )
