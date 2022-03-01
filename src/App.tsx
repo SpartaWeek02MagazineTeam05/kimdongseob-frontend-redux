@@ -46,7 +46,7 @@ function App() {
     <ThemeProvider theme={theme}>
       {/*<RecoilRoot>*/}
         <BrowserRouter>
-          <BodyWrapper>
+          <BodyWrapper id={"scroll-body-wrapper"}>
             <div>
               {/*<Suspense fallback={() => <p>loading...</p>}>*/}
               <Header changeTheme={changeTheme} isLogin={isLogin}/>

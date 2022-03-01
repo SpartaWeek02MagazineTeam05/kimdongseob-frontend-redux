@@ -33,7 +33,7 @@ const initialState: postType = {
 }
 
 export const getPostList: any = createAsyncThunk<any>('post/getPostList',
-  async () => {
+  async (data:any) => {
     const storageUserId: any = localStorage.getItem("userId");
     const userId: any = Number(storageUserId);
     return await instance.post(
@@ -42,7 +42,8 @@ export const getPostList: any = createAsyncThunk<any>('post/getPostList',
     )
       .then((res) => {
         if (res.data) {
-          return res.data
+          return ([res.data.total.slice(data.preItem, data.item), res.data.myLike]);
+          // return res.data
         }
       })
       .catch((err) => {
@@ -101,8 +102,9 @@ export const postSlice = createSlice({
   reducers: {},
   extraReducers: {
     [getPostList.fulfilled]: (state, action) => {
-      state.postList = action.payload.total;
-      state.myLike = action.payload.myLike;
+      state.postList = action.payload[0];
+      // state.postList = [...state.postList, ...action.payload[0]];
+      state.myLike = action.payload[1];
     },
     [deletePost.fulfilled]: (state, action) => {
       state.postList = state.postList.filter((post)=> post.id !== action.payload);
